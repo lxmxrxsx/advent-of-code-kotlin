@@ -5,36 +5,23 @@ import kotlin.math.abs
 class Day1 {
 
     fun part1(input: List<String>): Int {
-        val (left, right) = extracted(input)
+        fun Pair<List<Int>, List<Int>>.sorted() = first.sorted().zip(second.sorted())
 
-        val values = left.mapIndexed { index, it ->
-            abs(it - right[index])
-        }
-
-        return values.sum()
+        val lineList = toLineList(input)
+        return lineList.sorted().sumOf { (left, right) -> abs(left - right) }
     }
+
 
     fun part2(input: List<String>): Int {
-        val (left, right) = extracted(input)
-
-        val leftSet = left.toSet()
-
-        val res = leftSet.map { l -> l * right.count { l == it} }.toList()
-        return res.sum()
+        val (left, right) = toLineList(input)
+        return left.toSet().sumOf { l -> l * right.count { l == it} }
     }
 
-    private fun extracted(input: List<String>) : Pair<List<Int>, List<Int>> {
-        val left = mutableListOf<Int>()
-        val right = mutableListOf<Int>()
+    private fun toLineList(input: List<String>) : Pair<List<Int>, List<Int>> = input.map { line ->
+            val (left, right) = line.split("   ")
+            left.toInt() to right.toInt()
+    }.unzip()
 
-        for(item in input) {
-            val (l, r) = item.split("   ")
-            left.add(l.toInt())
-            right.add(r.toInt())
-        }
-
-        return left.sorted() to right.sorted()
-    }
 
 
 
